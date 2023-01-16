@@ -11,7 +11,7 @@ public class EnemyController : MonoBehaviour
     
     private SphereCollider _distanceToCheck;
 
-    internal Animator _enemyFSM;
+    public Animator _enemyFSM;
 
     private NavMeshAgent _navMeshAgent;
 
@@ -63,6 +63,18 @@ public class EnemyController : MonoBehaviour
         _currentPatrolIndex = 0;
         _currentPatrolPoint = myPatrolRoute.patrolPoints[_currentPatrolIndex];
     }
+    
+    public void UpdatePatrolPoint()
+    {
+        _currentPatrolIndex++;
+        if (_currentPatrolIndex >= myPatrolRoute.patrolPoints.Count)
+        {
+                _currentPatrolIndex = 0;
+        }
+
+        _currentPatrolPoint = myPatrolRoute.patrolPoints[_currentPatrolIndex];
+        
+    }
 
     public void SetDestinationToPatrolRoute()
     {
@@ -71,27 +83,12 @@ public class EnemyController : MonoBehaviour
 
     public void CheckPatrolPointDistance()
     {
-        _enemyFSM.SetFloat("Distance", Vector3.Distance(transform.position, myPatrolRoute.patrolPoints[_currentPatrolIndex].position));
+        _enemyFSM.SetFloat("Distance", Vector3.Distance(transform.position, _currentPatrolPoint.position));
     }
 
     public void SetDistance(float distanceToSet)
     {
         _distanceToCheck.radius = distanceToSet;
-    }
-
-    public void UpdatePatrolPoint()
-    {
-        _currentPatrolIndex++;
-        if (_currentPatrolIndex >= myPatrolRoute.patrolPoints.Count)
-        {
-            _currentPatrolIndex++;
-            if (_currentPatrolIndex >= myPatrolRoute.patrolPoints.Count)
-            {
-                _currentPatrolIndex = 0;
-            }
-
-            _currentPatrolPoint = myPatrolRoute.patrolPoints[_currentPatrolIndex];
-        }
     }
 
     private void OnTriggerEnter(Collider other)
